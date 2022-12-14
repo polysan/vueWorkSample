@@ -4,11 +4,13 @@
     <div class="container">
       <h1 class="title">Hello World</h1>
       <p class="subtitle">My first website with <strong>Bulma</strong>!</p>
-      <input type="file" ref="preview" @change="uploadFile" />
-      <div v-if="url" style="position: relative">
-        <div style="position: absolute" @click="deletePreview">X</div>
-        <img :src="url" alt="ここにプレビューが表示されます" />
-      </div>
+      <input type="file" ref="preview" @change="uploadFile" multiple />
+      <template v-if="urls.length > 0">
+        <div v-for="url in urls" :key="url" style="position: relative">
+          <div style="position: absolute" @click="deletePreview">X</div>
+          <img :src="url" alt="ここにプレビューが表示されます" />
+        </div>
+      </template>
     </div>
   </section>
 </template>
@@ -18,7 +20,7 @@ export default {
   data() {
     return {
       message: "Try Preview!",
-      url: "",
+      urls: [],
     };
   },
   mounted() {
@@ -26,12 +28,14 @@ export default {
   },
   methods: {
     uploadFile() {
-      const file = this.$refs.preview.files[0];
-      this.url = URL.createObjectURL(file);
+      const FILES = this.$refs.preview.files;
+      this.urls = Object.keys(FILES).map((element) =>
+        URL.createObjectURL(FILES[element])
+      );
       this.$refs.preview.value = "";
     },
     deletePreview() {
-      this.url = "";
+      this.urls = [];
       URL.revokeObjectURL(this.url);
     },
   },
