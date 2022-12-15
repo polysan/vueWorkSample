@@ -29,9 +29,10 @@ export default {
   methods: {
     uploadFile() {
       const FILES = this.$refs.preview.files;
-      this.urls = Object.keys(FILES).map((element) =>
+      const ADDFILES = Object.keys(FILES).map((element) =>
         URL.createObjectURL(FILES[element])
       );
+      this.urls = this.urls.concat(ADDFILES);
       this.$refs.preview.value = "";
     },
     deletePreview() {
