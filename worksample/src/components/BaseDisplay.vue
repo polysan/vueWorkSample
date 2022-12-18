@@ -1,14 +1,12 @@
-/* eslint-disable */
 <template>
   <section class="section">
     <div class="container">
       <h1 class="title">Hello World</h1>
       <p class="subtitle">My first website with <strong>Bulma</strong>!</p>
       <input type="file" ref="preview" @change="uploadFile" multiple />
-      <template v-if="urls.length > 0">
-        <div v-for="url in urls" :key="url" style="position: relative">
-          <div style="position: absolute" @click="deletePreview">X</div>
-          <img :src="url" alt="ここにプレビューが表示されます" />
+      <template v-if="imgFiles.length > 0">
+        <div v-for="file in imgFiles" :key="file">
+          <ImgDisplay :file="file" />
         </div>
       </template>
     </div>
@@ -16,28 +14,30 @@
 </template>
 
 <script>
+import ImgDisplay from "./ImgDisplay";
 export default {
+  components: { ImgDisplay },
   data() {
     return {
       message: "Try Preview!",
-      urls: [],
+      imgFiles: [],
+      imgId: 0,
+      imgOrder: 0,
     };
   },
-  mounted() {
-    console.log(this.$refs.preview);
-  },
+  mounted() {},
   methods: {
     uploadFile() {
       const FILES = this.$refs.preview.files;
-      const ADDFILES = Object.keys(FILES).map((element) =>
-        URL.createObjectURL(FILES[element])
-      );
-      this.urls = this.urls.concat(ADDFILES);
+
+      Object.keys(FILES).forEach((file) => {
+        FILES[file].id = this.imgId++;
+        FILES[file].order = this.imgOrder++;
+        this.imgFiles.push(FILES[file]);
+      });
+
+      console.log(this.imgFiles);
       this.$refs.preview.value = "";
-    },
-    deletePreview() {
-      this.urls = [];
-      URL.revokeObjectURL(this.url);
     },
   },
 };
