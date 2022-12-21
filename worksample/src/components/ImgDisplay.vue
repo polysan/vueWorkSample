@@ -1,5 +1,5 @@
 <template>
-  <div @click="deletePreview" style="position: absolute">X</div>
+  <div @click="deletePreview" class="delete">X</div>
   <img :src="createFileUrl" alt="ここにプレビューが表示されます" />
   <p>{{ "name:" + file.name }}</p>
   <p>{{ "id:" + file.id }}</p>
@@ -8,8 +8,12 @@
 <script>
 export default {
   props: ["file"],
+  emits: ["deleteFile"],
   methods: {
     deletePreview() {
+      console.log("deletePreview");
+      console.log(this.file.id);
+      this.$emit("deleteFile", this.file.id);
       // 作成したURLを開放するためにrevokeObjectURLを実行
       URL.revokeObjectURL(this.file);
     },
@@ -22,4 +26,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.delete {
+  cursor: pointer;
+  position: absolute;
+}
+</style>

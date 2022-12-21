@@ -16,7 +16,7 @@
             @dragend.stop.prevent="dragend"
             style="position: relative"
           >
-            <ImgDisplay :file="file" />
+            <ImgDisplay :file="file" @deleteFile="deleteFile" />
           </div>
         </template>
       </transition-group>
@@ -51,7 +51,13 @@ export default {
       console.log(this.imgFiles);
       this.$refs.preview.value = "";
     },
-
+    deleteFile(fileId) {
+      console.log(fileId);
+      this.imgFiles = this.imgFiles.filter((file) => {
+        return file.id != fileId;
+      });
+      console.log(this.imgFiles);
+    },
     dragstart(item, e) {
       this.draggingItem = item; // ドラッグ中の要素を保持
       e.dataTransfer.effectAllowed = "move"; // 移動モードに設定
