@@ -1,9 +1,10 @@
 <template>
   <div @click="deletePreview" class="delete">X</div>
-  <img :src="createFileUrl" alt="ここにプレビューが表示されます" />
+  <img :src="file.url" alt="ここにプレビューが表示されます" />
   <p>{{ "name:" + file.name }}</p>
   <p>{{ "id:" + file.id }}</p>
   <p>{{ "order:" + file.order }}</p>
+  <p>{{ "url:" + file.url }}</p>
 </template>
 <script>
 export default {
@@ -18,11 +19,11 @@ export default {
       URL.revokeObjectURL(this.file);
     },
   },
-  computed: {
-    createFileUrl: function () {
-      return URL.createObjectURL(this.file);
-    },
-  },
+  // computed: {
+  //   createFileUrl: function () {
+  //     return URL.createObjectURL(this.file);
+  //   },
+  // },
 };
 </script>
 
