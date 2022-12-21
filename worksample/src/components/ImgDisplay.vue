@@ -1,6 +1,7 @@
 <template>
-  <div @click="deletePreview">X</div>
+  <div @click="deletePreview" style="position: absolute">X</div>
   <img :src="createFileUrl" alt="ここにプレビューが表示されます" />
+  <p>{{ "name:" + file.name }}</p>
   <p>{{ "id:" + file.id }}</p>
   <p>{{ "order:" + file.order }}</p>
 </template>
