@@ -1,8 +1,9 @@
 <template>
   <section class="section">
-    <div class="container" style="max-width: 400px">
-      <h1 class="title">Hello World</h1>
-      <p class="subtitle">My first website with <strong>Bulma</strong>!</p>
+    <div class="container">
+      <p class="subtitle">
+        <strong>ドラッグ＆ドロップで<br />順序を入れ替えてください</strong>
+      </p>
       <input type="file" ref="preview" @change="uploadFile" multiple />
       <button
         class="button is-primary is-medium"
@@ -11,7 +12,11 @@
       >
         保存
       </button>
-      <transition-group name="files-list" tag="div">
+      <transition-group
+        name="files-list"
+        tag="div"
+        style="margin: 10px; display: flex; flex-wrap: wrap"
+      >
         <template v-if="imgFiles.length > 0">
           <div
             v-for="file in fileDisp"
@@ -21,7 +26,7 @@
             @dragenter="dragenter(file)"
             @dragover.stop.prevent="dragover"
             @dragend.stop.prevent="dragend"
-            style="position: relative"
+            style="position: relative; margin: 10px"
           >
             <ImgDisplay :file="file" @deleteFile="deleteFile" />
           </div>
@@ -39,30 +44,31 @@ export default {
   components: { ImgDisplay },
   data() {
     return {
-      message: "Try Preview!",
       imgFiles: [],
       submitFiles: [],
       imgId: 0,
       imgOrder: 0,
-      draggingItem: null, // ドラッグ中の要素を保持するための変数
+      draggingItem: null,
     };
   },
   mounted() {},
   methods: {
     uploadFile() {
       const FILES = this.$refs.preview.files;
-      console.log(this.imgFiles);
       Object.keys(FILES).forEach((file) => {
         FILES[file].id = this.imgId++;
         FILES[file].order = this.imgOrder++;
         FILES[file].url = URL.createObjectURL(FILES[file]);
         this.imgFiles.push(FILES[file]);
       });
-
-      console.log(this.imgFiles);
       this.$refs.preview.value = "";
     },
+
     save() {
+      let result = window.confirm("画像を保存しますか？");
+      if (!result) {
+        return;
+      }
       this.submitFiles = [];
       this.filesConvertSubmit();
       console.log(this.submitFiles);
@@ -75,6 +81,7 @@ export default {
             console.log("error!");
           }
           console.log("ok!");
+          alert("保存しました");
           return response.json();
         })
         .then((data) => {
@@ -84,9 +91,10 @@ export default {
           console.log(error);
         });
     },
+
     filesConvertSubmit() {
       let submitFile = {};
-      this.imgFiles.map((file) => {
+      this.imgFiles.forEach((file) => {
         submitFile.id = file.id;
         submitFile.order = file.order;
         submitFile.url = file.url;
@@ -97,11 +105,13 @@ export default {
     },
 
     deleteFile(fileId) {
-      console.log(fileId);
+      let result = window.confirm("削除しますか？");
+      if (!result) {
+        return;
+      }
       this.imgFiles = this.imgFiles.filter((file) => {
         return file.id != fileId;
       });
-      console.log(this.imgFiles);
     },
 
     ///////////// ドラッグ＆ドロップメソッド/////////////////
@@ -109,11 +119,8 @@ export default {
       this.draggingItem = item; // ドラッグ中の要素を保持
       e.dataTransfer.effectAllowed = "move"; // 移動モードに設定
       e.target.style.opacity = 0.5; // ドラッグ中要素のスタイルを変更
-      console.log("this.draggingItem:" + this.draggingItem.order);
     },
     dragenter(item) {
-      console.log("this.draggingItem.order:" + this.draggingItem.order);
-      console.log("item.order:" + item.order);
       // ドラッグ中の要素とドラッグ先の要素の表示順を入れ替える
       [item.order, this.draggingItem.order] = [
         this.draggingItem.order,
