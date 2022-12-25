@@ -8,18 +8,23 @@
     >
       保存
     </button>
-    <transition-group
-      name="files-list"
-      tag="div"
-      style="margin: 10px; display: flex; flex-wrap: wrap"
+    <!-- <transition-group name="files-list" tag="div" style="margin: 10px"> -->
+    <draggable
+      v-model="imgFiles"
+      item-key="id"
+      tag="ul"
+      @start="onStart"
+      @end="onEnd"
     >
-      <draggable v-model="imgFiles" item-key="no" tag="ul">
-        <template #item="{ element }">
-          <img :src="element" alt="ここにプレビューが表示されます" />
+      <template #item="{ element, index }">
+        <li>
+          <img :src="element.url" alt="ここにプレビューが表示されます" />
           <p>{{ element.name }}</p>
-        </template>
-      </draggable>
-    </transition-group>
+          <p>{{ index }}</p>
+        </li>
+      </template>
+    </draggable>
+    <!-- </transition-group> -->
   </div>
 </template>
 
@@ -32,20 +37,45 @@ export default {
   },
   data() {
     return {
-      items: [
-        { no: 1, name: "キャベツ", categoryNo: "1" },
-        { no: 2, name: "ステーキ", categoryNo: "2" },
-        { no: 3, name: "リンゴ", categoryNo: "3" },
-      ],
       imgFiles: [
-        { no: 1, name: "キャベツ", categoryNo: "1" },
-        { no: 2, name: "ステーキ", categoryNo: "2" },
-        { no: 3, name: "リンゴ", categoryNo: "3" },
+        {
+          id: 0,
+          order: 1,
+          url: "https://m.media-amazon.com/images/I/51CMd7VvQ3L._AC_SY450_.jpg",
+          name: "マウス",
+        },
+        {
+          id: 1,
+          order: 0,
+          url: "https://m.media-amazon.com/images/I/6160VVxyCcL._SX218_BO1,204,203,200_QL40_ML2_.jpg",
+          name: "本",
+        },
+        {
+          id: 2,
+          order: 2,
+          url: "https://m.media-amazon.com/images/I/416bRWgWanL._SY445_SX342_QL70_ML2_.jpg",
+          name: "手袋",
+        },
       ],
+      submitFiles: [],
+      imgId: 0,
+      imgOrder: 0,
     };
   },
-  mounted() {},
+  mounted() {
+    this.imgFiles = this.imgFiles.slice().sort((a, b) => a.order - b.order);
+  },
   methods: {
+    // onStart(element) {
+    //   console.log("start");
+    //   console.log(element);
+    // },
+    onEnd(element) {
+      console.log("end");
+      console.log(element);
+      console.log(this.imgFiles);
+      console.log();
+    },
     uploadFile() {
       const FILES = this.$refs.preview.files;
       Object.keys(FILES).forEach((file) => {
@@ -55,6 +85,7 @@ export default {
         this.imgFiles.push(FILES[file]);
       });
       this.$refs.preview.value = "";
+      console.log(this.imgFiles);
     },
 
     save() {
@@ -90,5 +121,13 @@ export default {
 <style scoped>
 .files-list-move {
   transition: transform 0.3s;
+}
+ul {
+  list-style-type: none;
+}
+li {
+  cursor: pointer;
+  padding: 10px;
+  /* border: solid #ddd 1px; */
 }
 </style>
