@@ -9,13 +9,15 @@
       保存
     </button>
     <draggable
+      class="draggable"
       v-model="imgFiles"
       item-key="id"
       tag="div"
+      v-bind="dragOptions"
       :options="{ handle: '.img' }"
     >
       <template #item="{ element, index }">
-        <div>
+        <div class="element">
           <img
             :src="element.url"
             class="img"
@@ -46,6 +48,16 @@ export default {
   },
   mounted() {
     this.imgFiles = this.imgFiles.slice().sort((a, b) => a.order - b.order);
+  },
+  computed: {
+    dragOptions() {
+      return {
+        animation: 300,
+        group: "description",
+        disabled: false,
+        ghostClass: "ghost",
+      };
+    },
   },
   methods: {
     uploadFile() {
@@ -109,6 +121,16 @@ export default {
 }
 .img {
   cursor: pointer;
+}
+.draggable {
+  margin: 10px;
+}
+.element {
+  margin: 10px;
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
 }
 ul {
   list-style-type: none;
