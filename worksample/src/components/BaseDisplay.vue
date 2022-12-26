@@ -8,17 +8,24 @@
     >
       保存
     </button>
-    <!-- <transition-group name="files-list" tag="div" style="margin: 10px"> -->
-    <draggable v-model="imgFiles" item-key="id" tag="ul" @end="onEnd">
+    <draggable
+      v-model="imgFiles"
+      item-key="id"
+      tag="div"
+      :options="{ handle: '.img' }"
+    >
       <template #item="{ element, index }">
-        <li>
-          <img :src="element.url" alt="ここにプレビューが表示されます" />
+        <div>
+          <img
+            :src="element.url"
+            class="img"
+            alt="ここにプレビューが表示されます"
+          />
           <p>{{ element.name }}</p>
           <p>{{ index }}</p>
-        </li>
+        </div>
       </template>
     </draggable>
-    <!-- </transition-group> -->
   </div>
 </template>
 
@@ -41,13 +48,6 @@ export default {
     this.imgFiles = this.imgFiles.slice().sort((a, b) => a.order - b.order);
   },
   methods: {
-    onEnd(element) {
-      // console.log("end");
-      console.log(element);
-      // console.log(element.item);
-      // console.log(this.imgFiles);
-      // console.log();
-    },
     uploadFile() {
       const FILES = this.$refs.preview.files;
       Object.keys(FILES).forEach((file) => {
@@ -106,6 +106,9 @@ export default {
 <style scoped>
 .files-list-move {
   transition: transform 0.3s;
+}
+.img {
+  cursor: pointer;
 }
 ul {
   list-style-type: none;
