@@ -9,13 +9,7 @@
       保存
     </button>
     <!-- <transition-group name="files-list" tag="div" style="margin: 10px"> -->
-    <draggable
-      v-model="imgFiles"
-      item-key="id"
-      tag="ul"
-      @start="onStart"
-      @end="onEnd"
-    >
+    <draggable v-model="imgFiles" item-key="id" tag="ul" @end="onEnd">
       <template #item="{ element, index }">
         <li>
           <img :src="element.url" alt="ここにプレビューが表示されます" />
@@ -37,26 +31,7 @@ export default {
   },
   data() {
     return {
-      imgFiles: [
-        {
-          id: 0,
-          order: 1,
-          url: "https://m.media-amazon.com/images/I/51CMd7VvQ3L._AC_SY450_.jpg",
-          name: "マウス",
-        },
-        {
-          id: 1,
-          order: 0,
-          url: "https://m.media-amazon.com/images/I/6160VVxyCcL._SX218_BO1,204,203,200_QL40_ML2_.jpg",
-          name: "本",
-        },
-        {
-          id: 2,
-          order: 2,
-          url: "https://m.media-amazon.com/images/I/416bRWgWanL._SY445_SX342_QL70_ML2_.jpg",
-          name: "手袋",
-        },
-      ],
+      imgFiles: [],
       submitFiles: [],
       imgId: 0,
       imgOrder: 0,
@@ -66,15 +41,12 @@ export default {
     this.imgFiles = this.imgFiles.slice().sort((a, b) => a.order - b.order);
   },
   methods: {
-    // onStart(element) {
-    //   console.log("start");
-    //   console.log(element);
-    // },
     onEnd(element) {
-      console.log("end");
+      // console.log("end");
       console.log(element);
-      console.log(this.imgFiles);
-      console.log();
+      // console.log(element.item);
+      // console.log(this.imgFiles);
+      // console.log();
     },
     uploadFile() {
       const FILES = this.$refs.preview.files;
@@ -115,6 +87,19 @@ export default {
           console.log(error);
         });
     },
+
+    filesConvertSubmit() {
+      let submitFile = {};
+      let order = 0;
+      this.imgFiles.forEach((file) => {
+        submitFile.id = file.id;
+        submitFile.order = order++;
+        submitFile.url = file.url;
+        submitFile.name = file.name;
+        this.submitFiles.push(submitFile);
+        submitFile = {};
+      });
+    },
   },
 };
 </script>
@@ -128,6 +113,5 @@ ul {
 li {
   cursor: pointer;
   padding: 10px;
-  /* border: solid #ddd 1px; */
 }
 </style>
