@@ -135,6 +135,8 @@ export default {
 }
 .draggable {
   margin: 10px;
+  display: flex;
+  flex-wrap: wrap;
 }
 .element {
   margin: 10px;
