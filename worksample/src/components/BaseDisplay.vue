@@ -18,6 +18,7 @@
     >
       <template #item="{ element, index }">
         <div class="element">
+          <div @click="deletePreview(element)" class="delete">X</div>
           <img
             :src="element.url"
             class="img"
@@ -71,7 +72,17 @@ export default {
       this.$refs.preview.value = "";
       console.log(this.imgFiles);
     },
-
+    deletePreview(targetFile) {
+      let result = window.confirm("削除しますか？");
+      if (!result) {
+        return;
+      }
+      // 作成したURLを開放するためにrevokeObjectURLを実行
+      URL.revokeObjectURL(targetFile.url);
+      this.imgFiles = this.imgFiles.filter((file) => {
+        return file.id != targetFile.id;
+      });
+    },
     save() {
       let result = window.confirm("画像を保存しますか？");
       if (!result) {
