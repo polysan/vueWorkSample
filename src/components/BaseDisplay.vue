@@ -84,6 +84,7 @@ export default {
       });
     },
     save() {
+      console.log(this.imgFiles);
       let result = window.confirm("画像を保存しますか？");
       if (!result) {
         return;
@@ -113,10 +114,9 @@ export default {
 
     filesConvertSubmit() {
       let submitFile = {};
-      let order = 0;
-      this.imgFiles.forEach((file) => {
+      this.imgFiles.forEach((file, index) => {
         submitFile.id = file.id;
-        submitFile.order = order++;
+        submitFile.order = index;
         submitFile.url = file.url;
         submitFile.name = file.name;
         this.submitFiles.push(submitFile);
