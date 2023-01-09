@@ -132,6 +132,8 @@ export default {
 }
 .img {
   cursor: pointer;
+  width: 300px;
+  height: 200px;
 }
 .draggable {
   margin: 10px;
